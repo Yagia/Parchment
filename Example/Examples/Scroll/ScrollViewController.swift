@@ -49,19 +49,21 @@ class ScrollViewController: UIViewController {
         super.viewDidLoad()
 
         // Add the paging view controller as a child view controller and
-        // contrain it to all edges.
+        // constrain it to all edges.
         addChild(pagingViewController)
         view.addSubview(pagingViewController.view)
         view.constrainToEdges(pagingViewController.view)
         pagingViewController.didMove(toParent: self)
+
+        // Prevent the menu from showing when scrolled out of view.
+        pagingViewController.view.clipsToBounds = true
 
         // Set our data source and delegate.
         pagingViewController.dataSource = self
         pagingViewController.delegate = self
     }
 
-    /// Calculate the menu offset based on the content offset of the
-    /// scroll view.
+    /// Calculate the menu offset based on the content offset of the scroll view.
     private func menuOffset(for scrollView: UIScrollView) -> CGFloat {
         return min(pagingViewController.options.menuHeight, max(0, scrollView.contentOffset.y))
     }
@@ -80,6 +82,9 @@ extension ScrollViewController: PagingViewControllerDataSource {
         // Set delegate so that we can listen to scroll events.
         viewController.tableView.delegate = self
 
+        // Ensure that the scroll view is scroll to the top.
+        viewController.tableView.contentOffset.y = -insets.top
+
         return viewController
     }
 
@@ -94,8 +99,13 @@ extension ScrollViewController: PagingViewControllerDataSource {
 
 extension ScrollViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // Offset the menu view based on the content offset of the
-        // scroll view.
+        // Only update the menu when the currently selected view is scrolled.
+        guard
+            let selectedViewController = pagingViewController.pageViewController.selectedViewController as? TableViewController,
+            selectedViewController.tableView === scrollView
+        else { return }
+
+        // Offset the menu view based on the content offset of the scroll view.
         if let menuView = pagingViewController.view as? ScrollPagingView {
             menuView.menuTopConstraint?.constant = -menuOffset(for: scrollView)
         }
@@ -115,6 +125,11 @@ extension ScrollViewController: PagingViewControllerDelegate {
         let from = menuOffset(for: startingViewController.tableView)
         let to = menuOffset(for: destinationViewController.tableView)
         let offset = ((to - from) * abs(progress)) + from
+
+        // Reset the content offset when scrolling to a new page. You
+        // could also remove this, and it will hide the menu when
+        // swiping back to the previous page.
+        destinationViewController.tableView.contentOffset.y = -pagingViewController.options.menuHeight
 
         menuView.menuTopConstraint?.constant = -offset
     }

@@ -39,22 +39,127 @@ Parchment lets you page between view controllers while showing any type of gener
 ## Table of contents
 
 - [Getting started](#getting-started)
-  - [Basic usage](#basic-usage)
-  - [Data source](#data-source)
-  - [Infinite data source](#infinite-data-source)
-  - [Selecting items](#selecting-items)
-  - [Reloading data](#reloading-data)
-  - [Delegate](#delegate)
-  - [Size delegate](#size-delegate)
-  - [Selecting items](#selecting-items)
-- [Customization](#customization)
+  - [SwiftUI](#basic-usage)
+    - [Basic usage](#basic-usage)
+    - [Dynamic pages](#dynamic-pages)
+    - [Update selection](#update-selection)
+    - [Modifiers](#modifiers)
+  - [UIKit](#basic-usage-with-uikit)
+    - [Basic usage with UIKit](#basic-usage-with-uikit)
+    - [Data source](#data-source)
+    - [Infinite data source](#infinite-data-source)
+    - [Selecting items](#selecting-items)
+    - [Reloading data](#reloading-data)
+    - [Delegate](#delegate)
+    - [Size delegate](#size-delegate)
+    - [Selecting items](#selecting-items)
+    - [Customization](#customization)
+- [Options](#options)
 - [Installation](#installation)
 - [Changelog](#changelog)
 - [Licence](#licence)
 
 ## Getting started
 
+Using UIKit? Go to [UIKit documentation](#basic-usage-with-uikit).
+
+<details open>
+
+<summary>SwiftUI</summary>
+
 ### Basic usage
+
+Create a `PageView` instance with the pages you want to show. Each `Page` takes a title and a content view, which can be any SwiftUI view.
+
+```swift
+PageView {
+    Page("Title 0") {
+        Text("Page 0")
+    }
+    Page("Title 1") {
+        Text("Page 1")
+    }
+}
+```
+
+By default, the menu items are displayed as titles, but you can also pass in any SwiftUI view as the menu item. The state parameter allows you to customize the menu item based on the selected state and scroll position of the view. For instance, you could show an icon that rotates based on its progress like this:
+
+```swift
+PageView {
+    Page { state in
+        Image(systemName: "star.fill")
+            .rotationEffect(Angle(degrees: 90 * state.progress))
+    } content: {
+        Text("Page 1")
+    }
+}
+```
+
+### Dynamic pages
+
+To create a `PageView` with a dynamic number of pages, you can pass in a collection of items where each item is mapped to a `Page`:
+
+```swift
+PageView(items, id: \.self) { item in
+    Page("Title \(item)") {
+        Text("Page \(item)")
+    }
+}
+```
+
+### Update selection
+
+To select specific items, you can pass a binding into `PageView` with the index of the currently selected item. When updating the binding, Parchment will scroll to the new index.
+
+```swift
+@State var selectedIndex: Int = 0
+...
+PageView(selectedIndex: $selectedIndex) {
+    Page("Title 1") {
+        Button("Next") {
+            selectedIndex = 1
+        }
+    }
+    Page("Title 2") {
+        Text("Page 2")
+    }
+}
+```
+
+### Modifiers
+
+You can customize the `PageView` using the following modifiers. See [Options](#options) for more details on each option.
+
+```swift
+PageView {
+    Page("Title 1") {
+        Text("Page 1")
+    }
+}
+.menuItemSize(.fixed(width: 100, height: 60))
+.menuItemSpacing(20)
+.menuItemLabelSpacing(30)
+.menuBackgroundColor(.white)
+.menuInsets(.vertical, 20)
+.menuHorizontalAlignment(.center)
+.menuPosition(.bottom)
+.menuTransition(.scrollAlongside)
+.menuInteraction(.swipe)
+.contentInteraction(.scrolling)
+.contentNavigationOrientation(.vertical)
+.selectedScrollPosition(.preferCentered)
+.indicatorOptions(.visible(height: 4))
+.indicatorColor(.blue)
+.borderOptions(.visible(height: 4))
+.borderColor(.blue.opacity(0.2))
+```
+
+</details>
+
+<details>
+<summary>UIKit</summary>
+
+### Basic usage with UIKit
 
 Parchment is built around the `PagingViewController` class. You can initialize it with an array of view controllers and it will display menu items for each view controller using their `title` property.
 
@@ -245,7 +350,7 @@ let pagingViewController = PagingViewController()
 pagingViewController.sizeDelegate = self
 ```
 
-## Customization
+### Customization
 
 Parchment is built to be very flexible. The menu items are displayed using UICollectionView, so they can display pretty much whatever you want. If you need any further customization you can even subclass the collection view layout. All customization is handled by the properties listed below.
 
@@ -269,6 +374,12 @@ let pagingViewController = PagingViewController()
 pagingViewController.menuItemSize = .fixed(width: 40, height: 40)
 pagingViewController.menuItemSpacing = 10
 ```
+
+See [Options](#options) for all customization options.
+
+</details>
+
+## Options
 
 #### `menuItemSize`
 

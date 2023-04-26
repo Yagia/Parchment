@@ -34,12 +34,12 @@ class ImagePagingView: PagingView {
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
 
             pageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             pageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             pageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            pageView.topAnchor.constraint(equalTo: topAnchor),
+            pageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
         ])
     }
 }

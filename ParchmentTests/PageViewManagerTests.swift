@@ -737,12 +737,12 @@ final class PageViewManagerTests: XCTestCase {
         manager.didScroll(progress: -0.01)
 
         // Expect that it triggers .isScrolling events for scroll events
-        // when overshooting, but does not trigger appereance transitions
+        // when overshooting, but does not trigger appearance transitions
         // for the next upcoming view (viewController3).
         XCTAssertEqual(delegate.calls, [
-            .isScrolling(from: viewController1, to: viewController2, progress: 0.0),
-            .isScrolling(from: viewController1, to: viewController2, progress: 0.01),
-            .isScrolling(from: viewController1, to: viewController2, progress: -0.01),
+            .isScrolling(from: viewController2, to: viewController3, progress: 0.0),
+            .isScrolling(from: viewController2, to: viewController3, progress: 0.01),
+            .isScrolling(from: viewController2, to: viewController3, progress: -0.01),
         ])
     }
 

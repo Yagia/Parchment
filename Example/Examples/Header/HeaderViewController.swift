@@ -10,9 +10,9 @@ import UIKit
 class HeaderPagingView: PagingView {
     static let HeaderHeight: CGFloat = 200
 
-    var headerHeightConstraint: NSLayoutConstraint?
+    var headerHeightConstraint: NSLayoutConstraint!
 
-    private lazy var headerView: UIImageView = {
+    private(set) lazy var headerView: UIImageView = {
         let view = UIImageView(image: UIImage(named: "Header"))
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
@@ -29,7 +29,12 @@ class HeaderPagingView: PagingView {
         headerHeightConstraint = headerView.heightAnchor.constraint(
             equalToConstant: HeaderPagingView.HeaderHeight
         )
-        headerHeightConstraint?.isActive = true
+        headerHeightConstraint.isActive = true
+        headerHeightConstraint.priority = .defaultLow
+
+        let bottomConstraint = headerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+        bottomConstraint.isActive = true
+        bottomConstraint.priority = .defaultHigh
 
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -73,9 +78,8 @@ class HeaderViewController: UIViewController {
 
     private let pagingViewController = HeaderPagingViewController()
 
-    private var headerConstraint: NSLayoutConstraint {
-        let pagingView = pagingViewController.view as! HeaderPagingView
-        return pagingView.headerHeightConstraint!
+    private var pagingView: HeaderPagingView {
+        return pagingViewController.view as! HeaderPagingView
     }
 
     override func viewDidLoad() {
@@ -128,7 +132,8 @@ extension HeaderViewController: PagingViewControllerDataSource {
         let height = pagingViewController.options.menuHeight + HeaderPagingView.HeaderHeight
         let insets = UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
         viewController.tableView.contentInset = insets
-        viewController.tableView.scrollIndicatorInsets = insets
+        viewController.tableView.scrollIndicatorInsets = UIEdgeInsets(top: height, left: 0, bottom: 0, right: 0)
+        viewController.tableView.contentOffset.y = -insets.top
 
         return viewController
     }
@@ -155,46 +160,34 @@ extension HeaderViewController: PagingViewControllerDelegate {
         }
     }
 
-    func pagingViewController(_: PagingViewController, willScrollToItem _: PagingItem, startingViewController _: UIViewController, destinationViewController: UIViewController) {
+    func pagingViewController(_: PagingViewController, isScrollingFromItem currentPagingItem: PagingItem, toItem upcomingPagingItem: PagingItem?, startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
         guard let destinationViewController = destinationViewController as? TableViewController else { return }
 
         // Update the content offset based on the height of the header
         // view. This ensures that the content offset is correct if you
         // swipe to a new page while the header view is hidden.
         if let scrollView = destinationViewController.tableView {
-            let offset = headerConstraint.constant + pagingViewController.options.menuHeight
+            let offset = pagingView.headerView.bounds.height + pagingViewController.options.menuHeight
             scrollView.contentOffset = CGPoint(x: 0, y: -offset)
-            updateScrollIndicatorInsets(in: scrollView)
         }
     }
 }
 
 extension HeaderViewController: UITableViewDelegate {
-    func updateScrollIndicatorInsets(in scrollView: UIScrollView) {
-        let offset = min(0, scrollView.contentOffset.y) * -1
-        let insetTop = max(pagingViewController.options.menuHeight, offset)
-        let insets = UIEdgeInsets(top: insetTop, left: 0, bottom: 0, right: 0)
-        scrollView.scrollIndicatorInsets = insets
-    }
-
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView.contentOffset.y < 0 else {
             // Reset the header constraint in case we scrolled so fast that
             // the height was not set to zero before the content offset
             // became negative.
-            if headerConstraint.constant > 0 {
-                headerConstraint.constant = 0
+            if pagingView.headerHeightConstraint.constant > 0 {
+                pagingView.headerHeightConstraint.constant = 0
             }
             return
         }
 
-        // Update the scroll indicator insets so they move alongside the
-        // header view when scrolling.
-        updateScrollIndicatorInsets(in: scrollView)
-
         // Update the height of the header view based on the content
         // offset of the currently selected view controller.
         let height = max(0, abs(scrollView.contentOffset.y) - pagingViewController.options.menuHeight)
-        headerConstraint.constant = height
+        pagingView.headerHeightConstraint.constant = height
     }
 }

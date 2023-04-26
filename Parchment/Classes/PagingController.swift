@@ -4,6 +4,7 @@ protocol PagingControllerSizeDelegate: AnyObject {
     func width(for: PagingItem, isSelected: Bool) -> CGFloat
 }
 
+@MainActor
 final class PagingController: NSObject {
     weak var dataSource: PagingMenuDataSource?
     weak var sizeDelegate: PagingControllerSizeDelegate?
@@ -327,6 +328,24 @@ final class PagingController: NSObject {
                 }
             }
         }
+
+        if collectionView.isDragging, case .wheel = options.menuInteraction {
+            let center = CGPoint(x: collectionView.bounds.midX, y: collectionView.bounds.midY)
+            if let indexPath = collectionView.indexPathForItem(at: center),
+               let currentPagingItem = state.currentPagingItem {
+                let currentIndexPath = visibleItems.indexPath(for: currentPagingItem)
+                if indexPath != currentIndexPath {
+                    let pagingItem = visibleItems.pagingItem(for: indexPath)
+                    state = .selected(pagingItem: pagingItem)
+                    collectionViewLayout.invalidateLayout()
+                    delegate?.selectContent(
+                        pagingItem: pagingItem,
+                        direction: .none,
+                        animated: false
+                    )
+                }
+            }
+        }
     }
 
     // MARK: Private
@@ -367,7 +386,7 @@ final class PagingController: NSObject {
         collectionView.alwaysBounceHorizontal = false
 
         switch options.menuInteraction {
-        case .scrolling:
+        case .scrolling, .wheel:
             collectionView.isScrollEnabled = true
             collectionView.alwaysBounceHorizontal = true
         case .swipe:
@@ -628,11 +647,28 @@ final class PagingController: NSObject {
         }
     }
 
-    private func configureSizeCache(for _: PagingItem) {
-        if sizeDelegate != nil {
-            sizeCache.implementsSizeDelegate = true
-            sizeCache.sizeForPagingItem = { [weak self] item, selected in
-                self?.sizeDelegate?.width(for: item, isSelected: selected)
+    private func configureSizeCache(for pagingItem: PagingItem) {
+        switch options.menuItemSize {
+        case .selfSizing:
+            if #available(iOS 14.0, *), pagingItem is PageItem {
+                sizeCache.implementsSizeDelegate = true
+                sizeCache.sizeForPagingItem = { [weak self] item, selected in
+                    guard let self else { return nil }
+                    let item = item as! PageItem
+                    let state = PageState(progress: selected ? 1 : 0, isSelected: selected)
+                    let configuration = item.page.header(self.options, state)
+                    let contentView = configuration.makeContentView()
+                    let size = contentView.sizeThatFits(UIView.layoutFittingCompressedSize)
+                    return size.width
+                }
+            }
+
+        case .fixed, .sizeToFit:
+            if sizeDelegate != nil  {
+                sizeCache.implementsSizeDelegate = true
+                sizeCache.sizeForPagingItem = { [weak self] item, selected in
+                    return self?.sizeDelegate?.width(for: item, isSelected: selected)
+                }
             }
         }
     }
@@ -653,8 +689,17 @@ extension PagingController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let pagingItem = visibleItems.items[indexPath.item]
+        var reuseIdentifier: String
+
+        if #available(iOS 14.0, *),
+           let item = pagingItem as? PageItem {
+            reuseIdentifier = item.page.reuseIdentifier
+        } else {
+            reuseIdentifier = String(describing: type(of: pagingItem))
+        }
+
         let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: String(describing: type(of: pagingItem)),
+            withReuseIdentifier: reuseIdentifier,
             for: indexPath
         ) as! PagingCell
         var selected: Bool = false

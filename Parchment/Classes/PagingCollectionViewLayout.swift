@@ -164,8 +164,8 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
         // preferred width for each cell. The preferred size is based on
         // the layout constraints in each cell.
         case .selfSizing where originalAttributes is PagingCellLayoutAttributes:
-            if preferredAttributes.frame.width != originalAttributes.frame.width {
-                let pagingItem = visibleItems.pagingItem(for: originalAttributes.indexPath)
+            let pagingItem = visibleItems.pagingItem(for: originalAttributes.indexPath)
+            if preferredAttributes.frame.width != preferredSizeCache[pagingItem.identifier] {
                 preferredSizeCache[pagingItem.identifier] = preferredAttributes.frame.width
                 return true
             }

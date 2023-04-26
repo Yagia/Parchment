@@ -45,14 +45,14 @@ class NavigationBarViewController: UIViewController {
         pagingViewController.selectedTextColor = .white
 
         // Make sure you add the PagingViewController as a child view
-        // controller and contrain it to the edges of the view.
+        // controller and constrain it to the edges of the view.
         addChild(pagingViewController)
         view.addSubview(pagingViewController.view)
         view.constrainToEdges(pagingViewController.view)
         pagingViewController.didMove(toParent: self)
 
         // Set the menu view as the title view on the navigation bar. This
-        // will remove the menu view from the view hierachy and put it
+        // will remove the menu view from the view hierarchy and put it
         // into the navigation bar.
         navigationItem.titleView = pagingViewController.collectionView
     }

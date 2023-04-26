@@ -5,6 +5,7 @@ enum Example: CaseIterable {
     case selfSizing
     case calendar
     case sizeDelegate
+    case wheel
     case images
     case icons
     case storyboard
@@ -25,6 +26,8 @@ enum Example: CaseIterable {
             return "Calendar"
         case .sizeDelegate:
             return "Size delegate"
+        case .wheel:
+            return "Wheel"
         case .images:
             return "Images"
         case .icons:
@@ -82,7 +85,7 @@ final class ExamplesViewController: UITableViewController {
 
         switch example {
         case .largeTitles:
-            let navigationController = UINavigationController(rootViewController: viewController)
+            let navigationController = NavigationController(rootViewController: viewController)
             navigationController.modalPresentationStyle = .fullScreen
             viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
                 barButtonSystemItem: .done,
@@ -106,6 +109,8 @@ final class ExamplesViewController: UITableViewController {
             return SelfSizingViewController()
         case .sizeDelegate:
             return SizeDelegateViewController(nibName: nil, bundle: nil)
+        case .wheel:
+            return WheelViewController()
         case .images:
             return UnsplashViewController(nibName: nil, bundle: nil)
         case .icons:
@@ -129,5 +134,34 @@ final class ExamplesViewController: UITableViewController {
 
     @objc private func handleDismiss() {
         dismiss(animated: true)
+    }
+}
+
+final class NavigationController: UINavigationController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .systemBlue
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationBar.tintColor = .white
+        navigationBar.standardAppearance = appearance
+        navigationBar.compactAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
+    }
+
+    // For debugging purposes. Adds a hook to push a new view
+    // controller to debug navigation controller related issues.
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            let viewController = UIViewController()
+            viewController.title = "Page"
+            viewController.view.backgroundColor = .white
+            pushViewController(viewController, animated: true)
+        }
     }
 }

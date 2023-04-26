@@ -4,7 +4,7 @@ public enum PagingBorderOptions {
     case hidden
     case visible(
         height: CGFloat,
-        zIndex: Int,
-        insets: UIEdgeInsets
+        zIndex: Int = 0,
+        insets: UIEdgeInsets = .zero
     )
 }

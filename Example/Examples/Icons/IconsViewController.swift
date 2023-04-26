@@ -1,30 +1,17 @@
 import Parchment
 import UIKit
 
-struct IconItem: PagingItem, Hashable {
+struct IconItem: PagingItem, PagingIndexable, Hashable {
+    let identifier: Int
     let icon: String
     let index: Int
     let image: UIImage?
 
     init(icon: String, index: Int) {
+        self.identifier = icon.hashValue
         self.icon = icon
         self.index = index
-        image = UIImage(named: icon)
-    }
-
-    /// By default, isBefore is implemented when the PagingItem conforms
-    /// to Comparable, but in this case we want a custom implementation
-    /// where we also compare IconItem with PagingIndexItem. This
-    /// ensures that we animate the page transition in the correct
-    /// direction when selecting items.
-    func isBefore(item: PagingItem) -> Bool {
-        if let item = item as? PagingIndexItem {
-            return index < item.index
-        } else if let item = item as? Self {
-            return index < item.index
-        } else {
-            return false
-        }
+        self.image = UIImage(named: icon)
     }
 }
 
@@ -64,7 +51,7 @@ class IconsViewController: UIViewController {
         pagingViewController.select(pagingItem: IconItem(icon: icons[0], index: 0))
 
         // Add the paging view controller as a child view controller
-        // and contrain it to all edges.
+        // and constrain it to all edges.
         addChild(pagingViewController)
         view.addSubview(pagingViewController.view)
         view.constrainToEdges(pagingViewController.view)

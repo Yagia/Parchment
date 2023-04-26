@@ -154,8 +154,8 @@ final class PageViewManager {
         }
     }
 
-    func viewWillLayoutSubviews() {
-        layoutsViews()
+    func viewDidLayoutSubviews() {
+        layoutsViews(keepContentOffset: false)
     }
 
     func viewWillAppear(_ animated: Bool) {
@@ -170,7 +170,7 @@ final class PageViewManager {
 
         switch state {
         case .center, .first, .last, .single:
-            layoutsViews()
+            layoutsViews(keepContentOffset: false)
         case .empty:
             break
         }
@@ -360,53 +360,25 @@ final class PageViewManager {
     }
 
     private func onScroll(progress: CGFloat) {
-        // This means we are overshooting, so we need to continue
-        // reporting the old view controllers.
-        if didReload {
-            switch initialDirection {
-            case .forward:
-                if let previousViewController = previousViewController,
-                    let selectedViewController = selectedViewController {
-                    delegate?.isScrolling(
-                        from: previousViewController,
-                        to: selectedViewController,
-                        progress: progress
-                    )
-                }
-            case .reverse:
-                if let nextViewController = nextViewController,
-                    let selectedViewController = selectedViewController {
-                    delegate?.isScrolling(
-                        from: nextViewController,
-                        to: selectedViewController,
-                        progress: progress
-                    )
-                }
-            case .none:
-                break
+        switch initialDirection {
+        case .forward:
+            if let selectedViewController = selectedViewController {
+                delegate?.isScrolling(
+                    from: selectedViewController,
+                    to: nextViewController,
+                    progress: progress
+                )
             }
-        } else {
-            // Report progress as normally
-            switch initialDirection {
-            case .forward:
-                if let selectedViewController = selectedViewController {
-                    delegate?.isScrolling(
-                        from: selectedViewController,
-                        to: nextViewController,
-                        progress: progress
-                    )
-                }
-            case .reverse:
-                if let selectedViewController = selectedViewController {
-                    delegate?.isScrolling(
-                        from: selectedViewController,
-                        to: previousViewController,
-                        progress: progress
-                    )
-                }
-            case .none:
-                break
+        case .reverse:
+            if let selectedViewController = selectedViewController {
+                delegate?.isScrolling(
+                    from: selectedViewController,
+                    to: previousViewController,
+                    progress: progress
+                )
             }
+        case .none:
+            break
         }
     }
 

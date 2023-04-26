@@ -2,6 +2,7 @@ import Foundation
 @testable import Parchment
 import XCTest
 
+@MainActor
 final class PagingControllerTests: XCTestCase {
     static let ItemSize: CGFloat = 50
 

@@ -12,18 +12,12 @@ class PagingSizeCache {
     init(options: PagingOptions) {
         self.options = options
 
-        let didEnterBackground = UIApplication.didEnterBackgroundNotification
-        let didReceiveMemoryWarning = UIApplication.didReceiveMemoryWarningNotification
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidEnterBackground(notification:)),
-                                               name: didEnterBackground,
-                                               object: nil)
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didReceiveMemoryWarning(notification:)),
-                                               name: didReceiveMemoryWarning,
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceiveMemoryWarning(notification:)),
+            name: UIApplication.didReceiveMemoryWarningNotification,
+            object: nil
+        )
     }
 
     deinit {
@@ -56,10 +50,6 @@ class PagingSizeCache {
     }
 
     @objc private func didReceiveMemoryWarning(notification _: NSNotification) {
-        clear()
-    }
-
-    @objc private func applicationDidEnterBackground(notification _: NSNotification) {
         clear()
     }
 }
