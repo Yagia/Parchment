@@ -457,8 +457,12 @@ final class PagingController: NSObject {
             // animation in order to stop any ongoing scroll.
             if upcomingPagingItem != nil {
                 if collectionView.contentSize.width >= collectionView.bounds.width, state.progress != 0 {
+                    var contentOffsetX = initialContentOffset.x + (distance * abs(progress))
+                    if contentOffsetX.isNaN || contentOffsetX.isInfinite {
+                        contentOffsetX = 0
+                    }
                     let contentOffset = CGPoint(
-                        x: initialContentOffset.x + (distance * abs(progress)),
+                        x: contentOffsetX,
                         y: initialContentOffset.y
                     )
                     collectionView.setContentOffset(contentOffset, animated: false)

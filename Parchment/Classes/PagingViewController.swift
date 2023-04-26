@@ -18,6 +18,7 @@ open class PagingViewController:
     PageViewControllerDelegate {
     // MARK: Public Properties
 
+    public var viewControllers: [UIViewController] = []
     /// The size for each of the menu items. _Default:
     /// .sizeToFit(minWidth: 150, height: 40)_
     public var menuItemSize: PagingMenuItemSize {
@@ -340,6 +341,7 @@ open class PagingViewController:
     ) {
         self.init(options: options)
         configureDataSource(for: viewControllers)
+        self.viewControllers = viewControllers
     }
 
     /// Creates an instance of `PagingViewController`.
