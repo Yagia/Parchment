@@ -302,9 +302,7 @@ extension PageViewController: PageViewManagerDelegate {
 
     func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool) {
         let viewControllers = isRightToLeft ? viewControllers.reversed() : viewControllers
-        
-        view.layoutIfNeeded()
-        
+                
         for (index, viewController) in viewControllers.enumerated() {
             switch options.contentNavigationOrientation {
             case .horizontal:
