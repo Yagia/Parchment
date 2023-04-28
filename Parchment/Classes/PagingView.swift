@@ -60,7 +60,7 @@ open class PagingView: UIView {
 
         let heightConstraint = collectionView.heightAnchor.constraint(equalToConstant: options.menuHeight)
         heightConstraint.isActive = true
-        heightConstraint.priority = .defaultHigh
+//        heightConstraint.priority = .defaultHigh
         self.heightConstraint = heightConstraint
 
         NSLayoutConstraint.activate([
