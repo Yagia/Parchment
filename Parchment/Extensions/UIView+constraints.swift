@@ -4,7 +4,7 @@ extension UIView {
     func constrainToEdges(_ subview: UIView) {
         subview.translatesAutoresizingMaskIntoConstraints = false
 
-        let topContraint = NSLayoutConstraint(
+        let topConstraint = NSLayoutConstraint(
             item: subview,
             attribute: .top,
             relatedBy: .equal,
@@ -24,7 +24,7 @@ extension UIView {
             constant: 0
         )
 
-        let leadingContraint = NSLayoutConstraint(
+        let leadingConstraint = NSLayoutConstraint(
             item: subview,
             attribute: .leading,
             relatedBy: .equal,
@@ -34,7 +34,7 @@ extension UIView {
             constant: 0
         )
 
-        let trailingContraint = NSLayoutConstraint(
+        let trailingConstraint = NSLayoutConstraint(
             item: subview,
             attribute: .trailing,
             relatedBy: .equal,
@@ -45,10 +45,10 @@ extension UIView {
         )
 
         addConstraints([
-            topContraint,
+            topConstraint,
             bottomConstraint,
-            leadingContraint,
-            trailingContraint,
+            leadingConstraint,
+            trailingConstraint,
         ])
     }
 }

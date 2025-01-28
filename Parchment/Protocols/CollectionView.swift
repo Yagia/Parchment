@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 protocol CollectionViewLayout: AnyObject {
     var state: PagingState { get set }
     var visibleItems: PagingItems { get set }
@@ -13,6 +14,7 @@ protocol CollectionViewLayout: AnyObject {
 
 extension PagingCollectionViewLayout: CollectionViewLayout {}
 
+@MainActor
 protocol CollectionView: AnyObject {
     var indexPathsForVisibleItems: [IndexPath] { get }
     var isDragging: Bool { get }

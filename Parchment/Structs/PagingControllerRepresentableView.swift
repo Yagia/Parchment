@@ -22,6 +22,8 @@ struct PagingControllerRepresentableView: UIViewControllerRepresentable {
         let pagingViewController = PagingViewController(options: options)
         pagingViewController.dataSource = context.coordinator
         pagingViewController.delegate = context.coordinator
+        pagingViewController.indicatorClass = PagingHostingIndicatorView.self
+        pagingViewController.collectionView.clipsToBounds = false
 
         if let items = items as? [PageItem] {
             for item in items {
@@ -39,13 +41,40 @@ struct PagingControllerRepresentableView: UIViewControllerRepresentable {
         _ pagingViewController: PagingViewController,
         context: UIViewControllerRepresentableContext<PagingControllerRepresentableView>
     ) {
+        var oldItems: [Int: PagingItem] = [:]
+
+        for oldItem in context.coordinator.parent.items {
+            if let oldItem = oldItem as? PageItem {
+                oldItems[oldItem.identifier] = oldItem
+            }
+        }
+
         context.coordinator.parent = self
 
         if pagingViewController.dataSource == nil {
             pagingViewController.dataSource = context.coordinator
         }
+        
+        pagingViewController.options = options
+        pagingViewController.indicatorClass = PagingHostingIndicatorView.self
 
-        pagingViewController.reloadData()
+        // We only want to reload the content views when the items have actually
+        // changed. For items that are added, a new view controller instance will
+        // be created by the PageViewCoordinator.
+        if let currentItem = pagingViewController.state.currentPagingItem,
+           let pageItem = currentItem as? PageItem,
+            let oldItem = oldItems[pageItem.identifier] {
+            pagingViewController.reloadMenu()
+            
+            if !oldItem.isEqual(to: currentItem) {
+                if let pageItem = currentItem as? PageItem,
+                   let viewController = context.coordinator.controllers[currentItem.identifier]?.value {
+                    pageItem.page.update(viewController)
+                }
+            }
+        } else {
+            pagingViewController.reloadData()
+        }
 
         // HACK: If the user don't pass a selectedIndex binding, the
         // default parameter is set to .constant(Int.max) which allows

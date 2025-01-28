@@ -52,7 +52,6 @@ Parchment lets you page between view controllers while showing any type of gener
     - [Reloading data](#reloading-data)
     - [Delegate](#delegate)
     - [Size delegate](#size-delegate)
-    - [Selecting items](#selecting-items)
     - [Customization](#customization)
 - [Options](#options)
 - [Installation](#installation)
@@ -245,7 +244,7 @@ Read more: [Using the infinite data source](/Documentation/infinite-data-source.
 
 ### Selecting items
 
-You can select items programatically using:
+You can select items programmatically using:
 
 ```Swift
 func select(pagingItem: PagingItem, animated: Bool = false)
@@ -617,7 +616,7 @@ Parchment will be compatible with the lastest public release of Swift.
 
 ### Requirements
 
-- iOS 11.0+
+- iOS 12.0+
 - Xcode 14.0+
 
 ### CocoaPods
@@ -625,7 +624,7 @@ Parchment will be compatible with the lastest public release of Swift.
 Parchment is available through [CocoaPods](https://cocoapods.org). To install it, add the following to your `Podfile`:
 
 ```
-pod 'Parchment', '~> 3.2'
+pod 'Parchment', '~> 4.0'
 ```
 
 ### Swift Package Manager
@@ -633,7 +632,7 @@ pod 'Parchment', '~> 3.2'
 Parchment is available through [Swift Package Manager](https://swift.org/package-manager/). Add Parchment as a dependency to your `Package.swift`:
 
 ```Swift
-.package(url: "https://github.com/rechsteiner/Parchment", from: "3.2.0")
+.package(url: "https://github.com/rechsteiner/Parchment", from: "4.0.0")
 ```
 
 ### Carthage
@@ -641,7 +640,7 @@ Parchment is available through [Swift Package Manager](https://swift.org/package
 Parchment also supports [Carthage](https://github.com/Carthage/Carthage). To install it, add the following to your `Cartfile`:
 
 ```
-github "rechsteiner/Parchment" ~> 3.2
+github "rechsteiner/Parchment" ~> 4.0
 ```
 
 See [this guide](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application) for more details on using Carthage.

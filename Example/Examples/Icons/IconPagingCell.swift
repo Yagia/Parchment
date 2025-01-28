@@ -72,7 +72,7 @@ class IconPagingCell: PagingCell {
     private func setupConstraints() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
 
-        let topContraint = NSLayoutConstraint(
+        let topConstraint = NSLayoutConstraint(
             item: imageView,
             attribute: .top,
             relatedBy: .equal,
@@ -92,7 +92,7 @@ class IconPagingCell: PagingCell {
             constant: -15
         )
 
-        let leadingContraint = NSLayoutConstraint(
+        let leadingConstraint = NSLayoutConstraint(
             item: imageView,
             attribute: .leading,
             relatedBy: .equal,
@@ -102,7 +102,7 @@ class IconPagingCell: PagingCell {
             constant: 0
         )
 
-        let trailingContraint = NSLayoutConstraint(
+        let trailingConstraint = NSLayoutConstraint(
             item: imageView,
             attribute: .trailing,
             relatedBy: .equal,
@@ -113,10 +113,10 @@ class IconPagingCell: PagingCell {
         )
 
         contentView.addConstraints([
-            topContraint,
+            topConstraint,
             bottomConstraint,
-            leadingContraint,
-            trailingContraint,
+            leadingConstraint,
+            trailingConstraint,
         ])
     }
 }

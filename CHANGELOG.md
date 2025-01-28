@@ -2,6 +2,60 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.0](https://github.com/rechsteiner/Parchment/compare/v4.0.0...v4.1.0) - 2024-09-29
+
+### Changes
+
+- Enable Swift 6 mode #723
+
+## [4.0.0](https://github.com/rechsteiner/Parchment/compare/v3.4.0...v4.0.0) - 2024-05-25
+
+Version 4.0 introduced a new and improved API for PageView in SwiftUI. Each page can now show define their own menu items, which can be any SwiftUI view. The new API also supports result builders, which allows you to easily setup your PageView.
+
+```swift
+PageView {
+    Page("Title 1") {
+        Text("Page 1")
+    }
+    Page { _ in
+        Image(systemName: "star.fill")
+    } content: {
+        Text("Page 2")
+    }
+}
+```
+
+## Changes
+
+- New API for PageView in SwiftUI #666
+- Updated minimum deployment target to iOS 11 #661
+- Constrain menu to safe area insets by default #668
+
+## Added
+
+- Add support for custom SwiftUI styles for indicator views #684
+- Add horizontal right alignment support #658
+- Add missing color modifiers to PageView #675
+- Add new PagingIndexable protocol to allow comparison between items #678
+
+## Fixes
+
+- Fix PageViewController isScrollingFrom delegate when overshooting #669
+- Fix didSelectItem delegate being called before actual selection #676
+- Fix setting PageView closures multiple times #677
+- Fix rotation and crash issues with calling layoutIfNeeded #680
+- Fix options not propagating changes when SwiftUI view is updated #697
+
+## [3.4.0](https://github.com/rechsteiner/Parchment/compare/v3.3.0...v3.4.0) - 2024-04-14
+
+- Update Swift version to 5.10 #705
+
+## [3.3.0](https://github.com/rechsteiner/Parchment/compare/v3.2.1...v3.3.0) - 2024-02-17
+
+- Set minimum deployment target to iOS 12 #699
+- Add privacy manifest file #695
+- Update Swift version to 5.9 #700
+
 ## [3.2.1](https://github.com/rechsteiner/Parchment/compare/v3.2.0...v3.2.1) - 2023-03-07
 
 ### Fixes

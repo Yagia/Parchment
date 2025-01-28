@@ -1,10 +1,11 @@
+import Testing
 @testable import Parchment
-import XCTest
 
-final class PagingDistanceCenteredTests: XCTestCase {
-    private var sizeCache: PagingSizeCache!
+@MainActor
+struct PagingDistanceCenteredTests {
+    private let sizeCache: PagingSizeCache
 
-    override func setUp() {
+    init() {
         sizeCache = PagingSizeCache(options: PagingOptions())
     }
 
@@ -18,7 +19,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 100
     /// ```
-    func testDistanceCentered() {
+    @Test func distanceCentered() {
         let distance = createDistance(
             bounds: CGRect(x: 100, y: 0, width: 500, height: 50),
             contentSize: CGSize(width: 1000, height: 50),
@@ -32,7 +33,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 100)
+        #expect(value == 100)
     }
 
     /// Distance from non-centered item to upcoming item.
@@ -45,7 +46,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 100
     /// ```
-    func testDistanceCenteredFromNotCentered() {
+    @Test func distanceCenteredFromNotCentered() {
         let distance = createDistance(
             bounds: CGRect(x: 100, y: 0, width: 400, height: 50),
             contentSize: CGSize(width: 1000, height: 50),
@@ -59,7 +60,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 100)
+        #expect(value == 100)
     }
 
     /// Distance to already centered item.
@@ -72,7 +73,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 100
     /// ```
-    func testDistanceCenteredToAlreadyCentered() {
+    @Test func distanceCenteredToAlreadyCentered() {
         let distance = createDistance(
             bounds: CGRect(x: 100, y: 0, width: 400, height: 50),
             contentSize: CGSize(width: 1000, height: 50),
@@ -86,7 +87,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 0)
+        #expect(value == 0)
     }
 
     /// Distance from larger, centered item to smaller item after.
@@ -99,7 +100,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └──────────────────────────────────────┘
     /// x: 100
     /// ```
-    func testDistanceCenteredUsingSizeDelegateScrollingForward() {
+    @Test func distanceCenteredUsingSizeDelegateScrollingForward() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -122,7 +123,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, -50)
+        #expect(value == -50)
     }
 
     /// Distance from larger, centered item to smaller item before.
@@ -135,7 +136,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └──────────────────────────────────────┘
     /// x: 100
     /// ```
-    func testDistanceCenteredUsingSizeDelegateScrollingBackward() {
+    @Test func distanceCenteredUsingSizeDelegateScrollingBackward() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -158,7 +159,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, -100)
+        #expect(value == -100)
     }
 
     /// Distance from an item scrolled out of view (so we don't have any
@@ -172,7 +173,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     ///                └──────────────────────────────────────┘
     ///                 x: 200
     /// ```
-    func testDistanceCenteredUsingSizeDelegateWithoutFromAttributes() {
+    @Test func distanceCenteredUsingSizeDelegateWithoutFromAttributes() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -195,7 +196,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 100)
+        #expect(value == 100)
     }
 
     /// Distance to item at the leading edge so it cannot be centered.
@@ -208,7 +209,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 0
     /// ```
-    func testDistanceCenteredToLeadingEdge() {
+    @Test func distanceCenteredToLeadingEdge() {
         let distance = createDistance(
             bounds: CGRect(x: 0, y: 0, width: 400, height: 50),
             contentSize: CGSize(width: 400, height: 50),
@@ -222,7 +223,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 0)
+        #expect(value == 0)
     }
 
     /// Distance to item at the leading edge so it cannot be centered,
@@ -236,7 +237,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 0
     /// ```
-    func testDistanceCenteredToLeadingEdgeWhenUsingSizeDelegate() {
+    @Test func distanceCenteredToLeadingEdgeWhenUsingSizeDelegate() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -259,7 +260,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 0)
+        #expect(value == 0)
     }
 
     /// Distance to item at the trailing edge so it cannot be centered.
@@ -272,7 +273,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └──────────────────────────────────────┘
     /// x: 600
     /// ```
-    func testDistanceCenteredToTrailingEdge() {
+    @Test func distanceCenteredToTrailingEdge() {
         let distance = createDistance(
             bounds: CGRect(x: 600, y: 0, width: 400, height: 50),
             contentSize: CGSize(width: 1000, height: 50),
@@ -286,7 +287,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 0)
+        #expect(value == 0)
     }
 
     /// Distance to item at the trailing edge so it cannot be centered,
@@ -300,7 +301,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     /// └──────────────────────────────────────┘
     /// x: 600
     /// ```
-    func testDistanceCenteredToTrailingEdgeWhenUsingSizeDelegate() {
+    @Test func distanceCenteredToTrailingEdgeWhenUsingSizeDelegate() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -323,7 +324,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 0)
+        #expect(value == 0)
     }
 
     /// Distance to item at the trailing edge when using the size
@@ -338,7 +339,7 @@ final class PagingDistanceCenteredTests: XCTestCase {
     ///                               └──────────────────────────────────────┘
     ///                               x: 600
     /// ```
-    func testDistanceCenteredToTrailingEdgeWhenUsingSizeDelegateWithHugeSelectedWidth() {
+    @Test func distanceCenteredToTrailingEdgeWhenUsingSizeDelegateWithHugeSelectedWidth() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -361,6 +362,6 @@ final class PagingDistanceCenteredTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, -50)
+        #expect(value == -50)
     }
 }

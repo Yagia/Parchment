@@ -41,7 +41,6 @@ open class PagingView: UIView {
     }
 
     // MARK: Public Methods
-
     /// Configures the view hierarchy, sets up the layout constraints
     /// and does any other customization based on the `PagingOptions`.
     /// Override this if you need any custom behavior.

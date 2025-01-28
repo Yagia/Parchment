@@ -31,7 +31,7 @@ public final class PageViewController: UIViewController {
 
     /// The underlying scroll view where the page view controllers are
     /// added. Changing the properties on this scroll view might cause
-    /// undefined behaviour.
+    /// undefined behavior.
     public private(set) lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isPagingEnabled = true

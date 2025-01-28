@@ -1,7 +1,7 @@
 import Parchment
 import UIKit
 
-// This example shows how to use Parchment togehter with
+// This example shows how to use Parchment together with
 // "prefersLargeTitles" on UINavigationBar. It works by creating a
 // "hidden" scroll view that is added as a subview to the view
 // controller. Apparently, UIKit will look for a scroll view that is
@@ -116,7 +116,7 @@ class LargeTitlesViewController: UIViewController {
         hiddenScrollView.contentInset = viewController.tableView.contentInset
         hiddenScrollView.contentOffset = viewController.tableView.contentOffset
 
-        // Set the UITableViewDelegate to the currenly visible table view.
+        // Set the UITableViewDelegate to the currently visible table view.
         viewController.tableView.delegate = self
     }
 }
@@ -154,7 +154,7 @@ extension LargeTitlesViewController: PagingViewControllerDelegate {
         guard let destinationViewController = destinationViewController as? TableViewController else { return }
         guard let startingViewController = startingViewController as? TableViewController else { return }
 
-        // Set the UITableViewDelegate back to the currenly selected
+        // Set the UITableViewDelegate back to the currently selected
         // view controller when the page scroll ended.
         if transitionSuccessful {
             destinationViewController.tableView.delegate = self

@@ -23,7 +23,7 @@ public struct PagingOptions {
     /// _Default: .top_
     public var menuPosition: PagingMenuPosition
 
-    /// Determine the transition behaviour of menu items while scrolling
+    /// Determine the transition behavior of menu items while scrolling
     /// the content. _Default: .scrollAlongside_
     public var menuTransition: PagingMenuTransition
 
@@ -43,7 +43,7 @@ public struct PagingOptions {
     public var menuLayoutClass: PagingCollectionViewLayout.Type
 
     /// Determine how the selected menu item should be aligned when it
-    /// is selected. Effectivly the same as the
+    /// is selected. Effectively the same as the
     /// `UICollectionViewScrollPosition`. _Default: .preferCentered_
     public var selectedScrollPosition: PagingSelectedScrollPosition
 

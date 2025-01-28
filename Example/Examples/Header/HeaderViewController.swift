@@ -100,7 +100,7 @@ class HeaderViewController: UIViewController {
             insets: .zero
         )
 
-        // Contrain the paging view to all edges.
+        // Constrain the paging view to all edges.
         pagingViewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             pagingViewController.view.topAnchor.constraint(equalTo: view.topAnchor),

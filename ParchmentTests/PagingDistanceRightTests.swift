@@ -1,10 +1,11 @@
+import Testing
 @testable import Parchment
-import XCTest
 
-final class PagingDistanceRightTests: XCTestCase {
-    private var sizeCache: PagingSizeCache!
+@MainActor
+struct PagingDistanceRightTests {
+    private let sizeCache: PagingSizeCache
 
-    override func setUp() {
+    init() {
         sizeCache = PagingSizeCache(options: PagingOptions())
     }
 
@@ -18,7 +19,7 @@ final class PagingDistanceRightTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 0
     /// ```
-    func testDistanceRight() {
+    @Test func distanceRight() {
         let distance = createDistance(
             bounds: CGRect(x: 0, y: 0, width: 500, height: 50),
             contentSize: CGSize(width: 1000, height: 50),
@@ -32,7 +33,7 @@ final class PagingDistanceRightTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 100)
+        #expect(value == 100)
     }
 
     /// Distance from right aligned item to upcoming item.
@@ -45,7 +46,7 @@ final class PagingDistanceRightTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 0
     /// ```
-    func testDistanceRightWithItemsBetween() {
+    @Test func distanceRightWithItemsBetween() {
         let distance = createDistance(
             bounds: CGRect(x: 0, y: 0, width: 500, height: 50),
             contentSize: CGSize(width: 1000, height: 50),
@@ -59,7 +60,7 @@ final class PagingDistanceRightTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 200)
+        #expect(value == 200)
     }
 
     /// Distance to upcoming item when scrolled slightly.
@@ -72,7 +73,7 @@ final class PagingDistanceRightTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 50
     /// ```
-    func testDistanceRightWithContentOffset() {
+    @Test func distanceRightWithContentOffset() {
         let distance = createDistance(
             bounds: CGRect(x: 50, y: 0, width: 500, height: 50),
             contentSize: CGSize(width: 1000, height: 50),
@@ -86,7 +87,7 @@ final class PagingDistanceRightTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 50)
+        #expect(value == 50)
     }
 
     /// Distance from larger, right-aligned item positioned before
@@ -100,7 +101,7 @@ final class PagingDistanceRightTests: XCTestCase {
     /// └───────────────────────────────────────┘
     /// x: 0
     /// ```
-    func testDistanceRightUsingSizeDelegateScrollingForward() {
+    @Test func distanceRightUsingSizeDelegateScrollingForward() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -123,7 +124,7 @@ final class PagingDistanceRightTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 50)
+        #expect(value == 50)
     }
 
     /// Distance from larger, right-aligned item positioned after
@@ -137,7 +138,7 @@ final class PagingDistanceRightTests: XCTestCase {
     /// └───────────────────────────────────────┘
     /// x: 200
     /// ```
-    func testDistanceRightUsingSizeDelegateScrollingBackward() {
+    @Test func distanceRightUsingSizeDelegateScrollingBackward() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -160,7 +161,7 @@ final class PagingDistanceRightTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, -50)
+        #expect(value == -50)
     }
 
     /// Distance from an item scrolled out of view (so we don't have any
@@ -174,7 +175,7 @@ final class PagingDistanceRightTests: XCTestCase {
     ///                  └───────────────────────────────────────┘
     ///                  x: 200
     /// ```
-    func testDistanceRightUsingSizeDelegateWithoutFromAttributes() {
+    @Test func distanceRightUsingSizeDelegateWithoutFromAttributes() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -197,6 +198,6 @@ final class PagingDistanceRightTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 50)
+        #expect(value == 50)
     }
 }

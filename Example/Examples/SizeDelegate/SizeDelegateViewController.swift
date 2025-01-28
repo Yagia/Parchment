@@ -2,7 +2,7 @@ import Parchment
 import UIKit
 
 final class SizeDelegateViewController: UIViewController {
-    // Let's start by creating an array of citites that we
+    // Let's start by creating an array of cities that we
     // will use to generate some view controllers.
     fileprivate let cities = [
         "Oslo",
@@ -30,7 +30,7 @@ final class SizeDelegateViewController: UIViewController {
         pagingViewController.sizeDelegate = self
 
         // Add the paging view controller as a child view controller and
-        // contrain it to all edges.
+        // constrain it to all edges.
         addChild(pagingViewController)
         view.addSubview(pagingViewController.view)
         view.constrainToEdges(pagingViewController.view)

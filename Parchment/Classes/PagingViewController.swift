@@ -59,7 +59,7 @@ open class PagingViewController:
         set { options.menuPosition = newValue }
     }
 
-    /// Determine the transition behaviour of menu items while scrolling
+    /// Determine the transition behavior of menu items while scrolling
     /// the content. _Default: .scrollAlongside_
     public var menuTransition: PagingMenuTransition {
         get { return options.menuTransition }
@@ -84,7 +84,7 @@ open class PagingViewController:
     }
 
     /// Determine how the selected menu item should be aligned when it
-    /// is selected. Effectivly the same as the
+    /// is selected. Effectively the same as the
     /// `UICollectionViewScrollPosition`. _Default: .preferCentered_
     public var selectedScrollPosition: PagingSelectedScrollPosition {
         get { return options.selectedScrollPosition }
@@ -267,7 +267,7 @@ open class PagingViewController:
 
     /// An instance that stores all the customization so that it's
     /// easier to share between other classes.
-    public private(set) var options: PagingOptions {
+    public internal(set) var options: PagingOptions {
         didSet {
             if options.menuLayoutClass != oldValue.menuLayoutClass {
                 let layout = createLayout(layout: options.menuLayoutClass.self)
@@ -440,14 +440,14 @@ open class PagingViewController:
     }
 
     /// Selects a given paging item. This need to be called after you
-    /// initilize the `PagingViewController` to set the initial
+    /// initialize the `PagingViewController` to set the initial
     /// `PagingItem`. This can be called both before and after the view
     /// has been loaded. You can also use this to programmatically
     /// navigate to another `PagingItem`.
     ///
     /// - Parameter pagingItem: The `PagingItem` to be displayed.
     /// - Parameter animated: A boolean value that indicates whether
-    /// the transtion should be animated. Default is false.
+    /// the transition should be animated. Default is false.
     open func select(pagingItem: PagingItem, animated: Bool = false) {
         pagingController.select(pagingItem: pagingItem, animated: animated)
     }

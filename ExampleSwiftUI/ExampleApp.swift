@@ -16,6 +16,8 @@ struct ExampleApp: App {
                         NavigationLink("Lifecycle events", destination: LifecycleView())
                         NavigationLink("Change items", destination: ChangeItemsView())
                         NavigationLink("Dynamic items", destination: DynamicItemsView())
+                        NavigationLink("Custom indicator", destination: CustomIndicatorView())
+                        NavigationLink("Scrolling Views", destination: ScrollingView())
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)

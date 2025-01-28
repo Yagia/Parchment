@@ -21,7 +21,7 @@ class MultipleCellsViewController: UIViewController {
         pagingViewController.select(index: 0)
 
         // Add the paging view controller as a child view controller
-        // and contrain it to all edges.
+        // and constrain it to all edges.
         addChild(pagingViewController)
         view.addSubview(pagingViewController.view)
 
